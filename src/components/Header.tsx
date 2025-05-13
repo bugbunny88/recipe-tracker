@@ -49,7 +49,7 @@ const Header: React.FC = () => {
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 group">
             <UtensilsCrossed className={`h-8 w-8 ${theme === 'dark' ? 'text-accent-400' : 'text-[#FF5C38]'} group-hover:text-[#e04e2e] transition-colors animate-float`} />
-            <span className={`text-2xl font-display font-bold ${theme === 'dark' ? 'text-white' : 'text-[#292929]'}`}>Yummy</span>
+            <span className={`text-2xl font-display font-bold ${theme === 'dark' ? 'text-white' : 'text-[#292929]'}`}>Masa Mía</span>
           </Link>
 
           {/* Desktop Navigation */}

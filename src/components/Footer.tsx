@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
           <div className="col-span-1 md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
               <UtensilsCrossed className="h-8 w-8 text-accent-400" />
-              <span className="text-2xl font-display font-bold">Yummy</span>
+              <span className="text-2xl font-display font-bold">Masa Mía</span>
             </div>
             <p className="text-primary-100 dark:text-gray-300 mb-6">
               Your recipe collection. Create, discover, and share delicious recipes together!
@@ -54,7 +54,7 @@ const Footer: React.FC = () => {
             <ul className="space-y-3">
               <li className="flex items-start">
                 <Mail className="h-5 w-5 text-accent-400 mr-2 mt-0.5" />
-                <span className="text-primary-100 dark:text-gray-300">hello@yummyrecipes.com</span>
+                <span className="text-primary-100 dark:text-gray-300">hello@masamia.com</span>
               </li>
               <li className="flex items-start">
                 <MapPin className="h-5 w-5 text-accent-400 mr-2 mt-0.5" />
@@ -68,7 +68,7 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="border-t border-primary-500 dark:border-gray-800 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-primary-200 dark:text-gray-400 text-sm">© 2025 Yummy. All rights reserved.</p>
+          <p className="text-primary-200 dark:text-gray-400 text-sm">© 2025 Masa Mía. All rights reserved.</p>
           <div className="flex space-x-4 mt-4 md:mt-0">
             <a href="#" className="text-primary-200 dark:text-gray-400 hover:text-accent-400 text-sm transition-colors">Privacy Policy</a>
             <a href="#" className="text-primary-200 dark:text-gray-400 hover:text-accent-400 text-sm transition-colors">Terms of Service</a>
