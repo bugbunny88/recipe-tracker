@@ -8,7 +8,6 @@ export interface Recipe {
   difficulty: 'Easy' | 'Medium' | 'Hard';
   ingredients: Ingredient[];
   instructions: string[];
-  cuisine: string;
   dietaryTags: string[];
   imageUrl: string;
   createdAt: string;

@@ -1,11 +1,6 @@
 import { Recipe } from './types';
 import { v4 as uuidv4 } from 'uuid';
 
-export const cuisines = [
-  'Mexican', 'Cuban', 'Puerto Rican', 'Colombian', 'Venezuelan', 
-  'Peruvian', 'Brazilian', 'Argentinian', 'Chilean', 'Spanish'
-];
-
 export const dietaryTags = [
   'Vegetarian', 'Vegan', 'Gluten-Free', 'Dairy-Free', 'Nut-Free',
   'Low-Carb', 'Keto', 'Paleo', 'Whole30', 'Pescatarian', 'High-Protein'
@@ -72,7 +67,6 @@ export const mockRecipes: Recipe[] = [
       'Season with salt to taste.',
       'Serve immediately or cover tightly with plastic wrap (press down on the surface) and refrigerate.'
     ],
-    cuisine: 'Mexican',
     dietaryTags: ['Vegetarian', 'Vegan', 'Gluten-Free', 'Dairy-Free'],
     imageUrl: 'https://images.pexels.com/photos/5865065/pexels-photo-5865065.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     createdAt: new Date(2023, 5, 10).toISOString(),
@@ -195,7 +189,6 @@ export const mockRecipes: Recipe[] = [
       'Return the shredded meat to the sauce, add the olives, and simmer for another 15-20 minutes.',
       'Adjust seasonings to taste and serve over rice.'
     ],
-    cuisine: 'Cuban',
     dietaryTags: ['Dairy-Free'],
     imageUrl: 'https://images.pexels.com/photos/14597516/pexels-photo-14597516.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     createdAt: new Date(2023, 6, 15).toISOString(),
@@ -270,7 +263,6 @@ export const mockRecipes: Recipe[] = [
       'Bake for 20-25 minutes until puffed and golden.',
       'Serve warm for the best texture and flavor.'
     ],
-    cuisine: 'Brazilian',
     dietaryTags: ['Gluten-Free', 'Vegetarian'],
     imageUrl: 'https://images.pexels.com/photos/5500954/pexels-photo-5500954.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     createdAt: new Date(2023, 7, 20).toISOString(),
