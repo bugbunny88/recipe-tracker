@@ -22,10 +22,16 @@ export function truncateText(text: string, maxLength: number): string {
 export function calculateTotalTime(prepTime: number, cookTime: number): string {
   const totalMinutes = prepTime + cookTime;
   if (totalMinutes < 60) return `${totalMinutes} min`;
-  
+
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
-  
+
   if (minutes === 0) return `${hours} hr`;
   return `${hours} hr ${minutes} min`;
 }
+
+export const container = cn(
+  "container mx-auto px-4",
+  "bg-background dark:bg-primary-900",
+  "text-primary-800 dark:text-primary-100"
+);

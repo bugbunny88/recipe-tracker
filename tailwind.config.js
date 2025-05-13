@@ -1,20 +1,25 @@
 /** @type {import('tailwindcss').Config} */
-export default {
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+module.exports = {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         primary: {
-          50: '#eef2ff',
-          100: '#e0e7ff',
-          200: '#c7d2fe',
-          300: '#a5b4fc',
-          400: '#818cf8',
-          500: '#6366f1',
-          600: '#4f46e5',
-          700: '#4338ca',
-          800: '#3730a3',
-          900: '#312e81',
+          50: '#f5f7ff',
+          100: '#ecf0ff',
+          200: '#d9e0ff',
+          300: '#b6c5ff',
+          400: '#8a9eff',
+          500: '#6b7eff',
+          600: '#4654ff',
+          700: '#3240db',
+          800: '#2a35b1',
+          900: '#272f8a',
+          950: '#1a1d52',
         },
         secondary: {
           50: '#fdf2f8',
@@ -29,32 +34,23 @@ export default {
           900: '#831843',
         },
         accent: {
-          50: '#f0fdfa',
-          100: '#ccfbf1',
-          200: '#99f6e4',
-          300: '#5eead4',
-          400: '#2dd4bf',
-          500: '#14b8a6',
-          600: '#0d9488',
-          700: '#0f766e',
-          800: '#115e59',
-          900: '#134e4a',
+          300: '#ffbb85',
+          400: '#ff9d5c',
+          500: '#ff7a1f',
+          600: '#e05e00',
         },
-        success: { 
-          500: '#22c55e',
-        },
-        warning: { 
-          500: '#f59e0b',
-        },
-        error: { 
+        error: {
           500: '#ef4444',
         },
-        background: '#ffffff',
+        success: {
+          500: '#22c55e',
+        },
+        background: '#f8fafc',
         surface: '#ffffff',
       },
       fontFamily: {
-        'sans': ['"Source Sans 3"', 'sans-serif'],
-        'display': ['"Playfair Display"', 'serif'],
+        display: ['"Playfair Display"', 'serif'],
+        sans: ['"Source Sans 3"', 'sans-serif'],
       },
       backgroundImage: {
         'pattern': "url('https://images.pexels.com/photos/5946081/pexels-photo-5946081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')",
@@ -75,18 +71,33 @@ export default {
         '24': '96px',
       },
       animation: {
-        'bounce-slow': 'bounce 3s infinite',
-        'wiggle': 'wiggle 1s ease-in-out infinite',
-        'float': 'float 3s ease-in-out infinite',
+        float: 'float 3s ease-in-out infinite',
+        fadeIn: 'fadeIn 0.7s ease-in forwards',
+        slideUp: 'slideUp 0.7s ease-out forwards',
+        slideRight: 'slideRight 0.7s ease-out forwards',
+        bounce: 'bounce 1s infinite',
+        scaleIn: 'scaleIn 0.5s ease-out forwards',
       },
       keyframes: {
-        wiggle: {
-          '0%, 100%': { transform: 'rotate(-3deg)' },
-          '50%': { transform: 'rotate(3deg)' },
-        },
         float: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-10px)' },
+        },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        slideRight: {
+          '0%': { transform: 'translateX(-20px)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+        scaleIn: {
+          '0%': { transform: 'scale(0.9)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
         },
       },
     },

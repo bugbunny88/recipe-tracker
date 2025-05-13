@@ -8,9 +8,9 @@ const RecipeDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { getRecipeById, toggleFavorite, deleteRecipe } = useRecipes();
-  
+
   const recipe = getRecipeById(id || '');
-  
+
   if (!recipe) {
     return (
       <div className="container-custom pt-32 pb-16">
@@ -24,7 +24,7 @@ const RecipeDetails: React.FC = () => {
       </div>
     );
   }
-  
+
   const handleDelete = () => {
     if (window.confirm('Are you sure you want to delete this recipe?')) {
       deleteRecipe(recipe.id);
@@ -36,29 +36,29 @@ const RecipeDetails: React.FC = () => {
     <div className="pt-20 animate-fadeIn">
       {/* Hero Image */}
       <div className="relative h-[40vh] min-h-[300px] md:h-[50vh]">
-        <img 
-          src={recipe.imageUrl} 
-          alt={recipe.title} 
+        <img
+          src={recipe.imageUrl}
+          alt={recipe.title}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-        
+
         <div className="absolute top-4 left-4">
-          <button 
-            onClick={() => navigate(-1)} 
+          <button
+            onClick={() => navigate(-1)}
             className="flex items-center gap-2 text-white bg-black/30 hover:bg-black/50 backdrop-blur-sm p-2 rounded-full transition-colors"
           >
             <ArrowLeft className="h-5 w-5" />
             <span className="sr-only">Back</span>
           </button>
         </div>
-        
+
         <div className="absolute bottom-0 left-0 right-0 p-6">
           <div className="container-custom">
             <div className="flex flex-wrap gap-2 mb-3">
               {recipe.dietaryTags.map((tag, index) => (
-                <span 
-                  key={index} 
+                <span
+                  key={index}
                   className="bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm"
                 >
                   {tag}
@@ -69,7 +69,7 @@ const RecipeDetails: React.FC = () => {
           </div>
         </div>
       </div>
-      
+
       <div className="container-custom py-8">
         <div className="flex flex-col md:flex-row gap-8">
           {/* Main Content */}
@@ -84,7 +84,7 @@ const RecipeDetails: React.FC = () => {
                     <p className="font-medium">{calculateTotalTime(recipe.prepTime, recipe.cookTime)}</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center">
                   <Users className="h-5 w-5 text-primary-600 mr-2" />
                   <div>
@@ -93,9 +93,9 @@ const RecipeDetails: React.FC = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-2">
-                <button 
+                <button
                   onClick={() => toggleFavorite(recipe.id)}
                   className="flex items-center gap-2 p-2 rounded-md border border-primary-200 hover:bg-primary-50 transition-colors"
                   aria-label={recipe.isFavorite ? "Remove from favorites" : "Add to favorites"}
@@ -103,21 +103,21 @@ const RecipeDetails: React.FC = () => {
                   <Heart className={`h-5 w-5 ${recipe.isFavorite ? "fill-error-500 text-error-500" : "text-primary-600"}`} />
                   <span>{recipe.isFavorite ? "Favorited" : "Favorite"}</span>
                 </button>
-                
+
                 <button className="flex items-center gap-2 p-2 rounded-md border border-primary-200 hover:bg-primary-50 transition-colors">
                   <Share2 className="h-5 w-5 text-primary-600" />
                   <span>Share</span>
                 </button>
-                
-                <Link 
+
+                <Link
                   to={`/recipes/${recipe.id}/edit`}
                   className="flex items-center gap-2 p-2 rounded-md border border-primary-200 hover:bg-primary-50 transition-colors"
                 >
                   <Edit className="h-5 w-5 text-primary-600" />
                   <span>Edit</span>
                 </Link>
-                
-                <button 
+
+                <button
                   onClick={handleDelete}
                   className="flex items-center gap-2 p-2 rounded-md border border-error-500 text-error-500 hover:bg-error-500/10 transition-colors"
                 >
@@ -126,13 +126,13 @@ const RecipeDetails: React.FC = () => {
                 </button>
               </div>
             </div>
-            
+
             {/* Description */}
             <div className="mb-8">
               <h2 className="text-2xl font-display font-bold text-primary-800 mb-4">Description</h2>
               <p className="text-primary-700">{recipe.description}</p>
             </div>
-            
+
             {/* Ingredients */}
             <div className="mb-8">
               <h2 className="text-2xl font-display font-bold text-primary-800 mb-4">Ingredients</h2>
@@ -155,7 +155,7 @@ const RecipeDetails: React.FC = () => {
                 ))}
               </ul>
             </div>
-            
+
             {/* Instructions */}
             <div className="mb-8">
               <h2 className="text-2xl font-display font-bold text-primary-800 mb-4">Instructions</h2>
@@ -172,18 +172,18 @@ const RecipeDetails: React.FC = () => {
                 ))}
               </ol>
             </div>
-            
+
             {/* Notes/Tips Section */}
             <div className="mb-8">
               <h2 className="text-2xl font-display font-bold text-primary-800 mb-4">Recipe Notes</h2>
               <div className="bg-primary-50 border-l-4 border-primary-500 p-4 rounded-r-lg">
                 <p className="italic text-primary-700">
-                  This {recipe.cuisine} classic is best served fresh. If you need to prepare ahead, store the ingredients separately and assemble just before serving.
+                  This classic dish is best served fresh. If you need to prepare ahead, store the ingredients separately and assemble just before serving.
                 </p>
               </div>
             </div>
           </div>
-          
+
           {/* Sidebar */}
           <div className="w-full md:w-80 flex-shrink-0">
             {/* Nutrition Facts */}
@@ -192,7 +192,7 @@ const RecipeDetails: React.FC = () => {
                 <h3 className="font-display font-bold text-xl">Nutrition Facts</h3>
                 <p className="text-sm text-primary-100">Per serving</p>
               </div>
-              
+
               <div className="p-4 space-y-3">
                 <div className="flex justify-between border-b border-primary-100 pb-2">
                   <span className="font-medium">Calories</span>
@@ -224,11 +224,11 @@ const RecipeDetails: React.FC = () => {
                 )}
               </div>
             </div>
-            
+
             {/* Recipe Info */}
             <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
               <h3 className="font-display font-bold text-xl text-primary-800 mb-3">Recipe Info</h3>
-              
+
               <div className="space-y-3">
                 <div className="flex justify-between border-b border-primary-100 pb-2">
                   <span className="text-primary-600">Cuisine</span>
@@ -252,15 +252,15 @@ const RecipeDetails: React.FC = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Affiliate Links (if any) */}
             {recipe.affiliateLinks && recipe.affiliateLinks.length > 0 && (
               <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
                 <h3 className="font-display font-bold text-xl text-primary-800 mb-3">Recommended Products</h3>
-                
+
                 <div className="space-y-4">
                   {recipe.affiliateLinks.map(link => (
-                    <a 
+                    <a
                       key={link.id}
                       href={link.url}
                       target="_blank"

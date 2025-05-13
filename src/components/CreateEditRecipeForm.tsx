@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useRecipes } from '../contexts/RecipeContext';
 import { Recipe, Ingredient, Nutrition, AffiliateLink } from '../utils/types';
 import { Plus, Minus, X, CheckCircle2 } from 'lucide-react';
-import { cuisines, dietaryTags } from '../utils/mockData';
+import { dietaryTags } from '../utils/mockData';
 
 interface CreateEditRecipeFormProps {
   existingRecipe?: Recipe;
@@ -14,14 +14,13 @@ interface CreateEditRecipeFormProps {
 const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRecipe, mode }) => {
   const navigate = useNavigate();
   const { addRecipe, updateRecipe } = useRecipes();
-  
+
   const [title, setTitle] = useState(existingRecipe?.title || '');
   const [description, setDescription] = useState(existingRecipe?.description || '');
   const [prepTime, setPrepTime] = useState(existingRecipe?.prepTime || 15);
   const [cookTime, setCookTime] = useState(existingRecipe?.cookTime || 30);
   const [servings, setServings] = useState(existingRecipe?.servings || 4);
   const [difficulty, setDifficulty] = useState<'Easy' | 'Medium' | 'Hard'>(existingRecipe?.difficulty || 'Medium');
-  const [cuisine, setCuisine] = useState(existingRecipe?.cuisine || '');
   const [selectedDietaryTags, setSelectedDietaryTags] = useState<string[]>(existingRecipe?.dietaryTags || []);
   const [imageUrl, setImageUrl] = useState(existingRecipe?.imageUrl || '');
   const [ingredients, setIngredients] = useState<Ingredient[]>(existingRecipe?.ingredients || [
@@ -35,7 +34,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
     fat: 0
   });
   const [affiliateLinks, setAffiliateLinks] = useState<AffiliateLink[]>(existingRecipe?.affiliateLinks || []);
-  
+
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -51,9 +50,9 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
   // Handle ingredient changes
   const updateIngredient = (index: number, field: keyof Ingredient, value: string) => {
     const updatedIngredients = [...ingredients];
-    updatedIngredients[index] = { 
-      ...updatedIngredients[index], 
-      [field]: value 
+    updatedIngredients[index] = {
+      ...updatedIngredients[index],
+      [field]: value
     };
     setIngredients(updatedIngredients);
   };
@@ -61,7 +60,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
   // Add new ingredient
   const addIngredient = () => {
     setIngredients([
-      ...ingredients, 
+      ...ingredients,
       { id: uuidv4(), name: '', quantity: '', unit: '', notes: '' }
     ]);
   };
@@ -107,9 +106,9 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
   // Handle affiliate link changes
   const updateAffiliateLink = (index: number, field: keyof AffiliateLink, value: string) => {
     const updatedLinks = [...affiliateLinks];
-    updatedLinks[index] = { 
-      ...updatedLinks[index], 
-      [field]: value 
+    updatedLinks[index] = {
+      ...updatedLinks[index],
+      [field]: value
     };
     setAffiliateLinks(updatedLinks);
   };
@@ -117,7 +116,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
   // Add new affiliate link
   const addAffiliateLink = () => {
     setAffiliateLinks([
-      ...affiliateLinks, 
+      ...affiliateLinks,
       { id: uuidv4(), title: '', url: '', description: '' }
     ]);
   };
@@ -132,12 +131,11 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
   // Validation
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!title.trim()) newErrors.title = 'Title is required';
     if (!description.trim()) newErrors.description = 'Description is required';
     if (!imageUrl.trim()) newErrors.imageUrl = 'Image URL is required';
-    if (!cuisine) newErrors.cuisine = 'Cuisine is required';
-    
+
     // Validate ingredients
     let hasIngredientError = false;
     ingredients.forEach((ingredient, index) => {
@@ -146,7 +144,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
       }
     });
     if (hasIngredientError) newErrors.ingredients = 'All ingredients must have a name, quantity, and unit';
-    
+
     // Validate instructions
     let hasInstructionError = false;
     instructions.forEach((instruction, index) => {
@@ -155,7 +153,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
       }
     });
     if (hasInstructionError) newErrors.instructions = 'All instruction steps must be filled out';
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -163,18 +161,18 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
   // Submit form
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
-    
+
     try {
       // Filter out empty ingredients and instructions
       const filteredIngredients = ingredients.filter(ing => ing.name.trim() !== '');
       const filteredInstructions = instructions.filter(inst => inst.trim() !== '');
       const filteredAffiliateLinks = affiliateLinks.filter(link => link.title.trim() !== '' && link.url.trim() !== '');
-      
+
       const recipeData = {
         title,
         description,
@@ -184,14 +182,13 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
         difficulty,
         ingredients: filteredIngredients,
         instructions: filteredInstructions,
-        cuisine,
         dietaryTags: selectedDietaryTags,
         imageUrl,
         nutrition,
         isFavorite: existingRecipe?.isFavorite || false,
         affiliateLinks: filteredAffiliateLinks
       };
-      
+
       if (mode === 'create') {
         const newRecipe = addRecipe(recipeData);
         setSuccessMessage('Recipe created successfully!');
@@ -220,7 +217,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
             {successMessage}
           </div>
         )}
-        
+
         {/* Error Summary */}
         {Object.keys(errors).length > 0 && (
           <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
@@ -232,7 +229,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
             </ul>
           </div>
         )}
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           {/* Title */}
           <div className="md:col-span-2">
@@ -247,7 +244,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
             />
             {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
           </div>
-          
+
           {/* Description */}
           <div className="md:col-span-2">
             <label htmlFor="description" className="label">Description</label>
@@ -260,7 +257,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
             />
             {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
           </div>
-          
+
           {/* Image URL */}
           <div className="md:col-span-2">
             <label htmlFor="imageUrl" className="label">Image URL</label>
@@ -279,7 +276,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
               </div>
             )}
           </div>
-          
+
           {/* Prep Time */}
           <div>
             <label htmlFor="prepTime" className="label">Prep Time (minutes)</label>
@@ -292,7 +289,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
               className="input"
             />
           </div>
-          
+
           {/* Cook Time */}
           <div>
             <label htmlFor="cookTime" className="label">Cook Time (minutes)</label>
@@ -305,7 +302,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
               className="input"
             />
           </div>
-          
+
           {/* Servings */}
           <div>
             <label htmlFor="servings" className="label">Servings</label>
@@ -318,7 +315,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
               className="input"
             />
           </div>
-          
+
           {/* Difficulty */}
           <div>
             <label htmlFor="difficulty" className="label">Difficulty</label>
@@ -333,25 +330,8 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
               <option value="Hard">Hard</option>
             </select>
           </div>
-          
-          {/* Cuisine */}
-          <div>
-            <label htmlFor="cuisine" className="label">Cuisine</label>
-            <select
-              id="cuisine"
-              value={cuisine}
-              onChange={(e) => setCuisine(e.target.value)}
-              className={`input ${errors.cuisine ? 'border-red-500' : ''}`}
-            >
-              <option value="">Select Cuisine</option>
-              {cuisines.map((c, index) => (
-                <option key={index} value={c}>{c}</option>
-              ))}
-            </select>
-            {errors.cuisine && <p className="text-red-500 text-sm mt-1">{errors.cuisine}</p>}
-          </div>
         </div>
-        
+
         {/* Dietary Tags */}
         <div className="mb-8">
           <label className="label">Dietary Tags</label>
@@ -361,18 +341,17 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
                 type="button"
                 key={index}
                 onClick={() => toggleDietaryTag(tag)}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  selectedDietaryTags.includes(tag)
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-primary-100 text-primary-700 hover:bg-primary-200'
-                }`}
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${selectedDietaryTags.includes(tag)
+                  ? 'bg-primary-600 text-white'
+                  : 'bg-primary-100 text-primary-700 hover:bg-primary-200'
+                  }`}
               >
                 {tag}
               </button>
             ))}
           </div>
         </div>
-        
+
         {/* Ingredients */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
@@ -386,9 +365,9 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
               Add Ingredient
             </button>
           </div>
-          
+
           {errors.ingredients && <p className="text-red-500 text-sm mb-2">{errors.ingredients}</p>}
-          
+
           <div className="space-y-4">
             {ingredients.map((ingredient, index) => (
               <div key={index} className="bg-primary-50 p-4 rounded-md">
@@ -404,7 +383,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
                     <span className="sr-only">Remove</span>
                   </button>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
                     <label htmlFor={`ingredient-name-${index}`} className="label">Name</label>
@@ -417,7 +396,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
                       placeholder="E.g., Avocado"
                     />
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-2">
                     <div>
                       <label htmlFor={`ingredient-quantity-${index}`} className="label">Quantity</label>
@@ -430,7 +409,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
                         placeholder="E.g., 2"
                       />
                     </div>
-                    
+
                     <div>
                       <label htmlFor={`ingredient-unit-${index}`} className="label">Unit</label>
                       <input
@@ -443,7 +422,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
                       />
                     </div>
                   </div>
-                  
+
                   <div className="md:col-span-2">
                     <label htmlFor={`ingredient-notes-${index}`} className="label">Notes (optional)</label>
                     <input
@@ -460,7 +439,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
             ))}
           </div>
         </div>
-        
+
         {/* Instructions */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
@@ -474,16 +453,16 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
               Add Step
             </button>
           </div>
-          
+
           {errors.instructions && <p className="text-red-500 text-sm mb-2">{errors.instructions}</p>}
-          
+
           <div className="space-y-4">
             {instructions.map((instruction, index) => (
               <div key={index} className="flex gap-3">
                 <div className="flex-shrink-0 h-8 w-8 rounded-full bg-primary-600 text-white flex items-center justify-center font-medium">
                   {index + 1}
                 </div>
-                
+
                 <div className="flex-grow">
                   <textarea
                     value={instruction}
@@ -492,7 +471,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
                     placeholder={`Step ${index + 1} instructions...`}
                   />
                 </div>
-                
+
                 <button
                   type="button"
                   onClick={() => removeInstruction(index)}
@@ -506,11 +485,11 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
             ))}
           </div>
         </div>
-        
+
         {/* Nutrition */}
         <div className="mb-8">
           <label className="text-lg font-display font-bold text-primary-800 mb-4">Nutrition Information</label>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
               <label htmlFor="calories" className="label">Calories</label>
@@ -524,7 +503,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
                 placeholder="0"
               />
             </div>
-            
+
             <div>
               <label htmlFor="protein" className="label">Protein (g)</label>
               <input
@@ -537,7 +516,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
                 placeholder="0"
               />
             </div>
-            
+
             <div>
               <label htmlFor="carbs" className="label">Carbs (g)</label>
               <input
@@ -550,7 +529,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
                 placeholder="0"
               />
             </div>
-            
+
             <div>
               <label htmlFor="fat" className="label">Fat (g)</label>
               <input
@@ -563,7 +542,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
                 placeholder="0"
               />
             </div>
-            
+
             <div>
               <label htmlFor="fiber" className="label">Fiber (g)</label>
               <input
@@ -576,7 +555,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
                 placeholder="0"
               />
             </div>
-            
+
             <div>
               <label htmlFor="sugar" className="label">Sugar (g)</label>
               <input
@@ -589,7 +568,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
                 placeholder="0"
               />
             </div>
-            
+
             <div>
               <label htmlFor="sodium" className="label">Sodium (mg)</label>
               <input
@@ -604,7 +583,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
             </div>
           </div>
         </div>
-        
+
         {/* Affiliate Links */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
@@ -618,7 +597,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
               Add Link
             </button>
           </div>
-          
+
           <div className="space-y-4">
             {affiliateLinks.map((link, index) => (
               <div key={index} className="border border-primary-200 p-4 rounded-md">
@@ -633,7 +612,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
                     <span className="sr-only">Remove</span>
                   </button>
                 </div>
-                
+
                 <div className="grid grid-cols-1 gap-3">
                   <div>
                     <label htmlFor={`affiliate-title-${index}`} className="label">Title</label>
@@ -646,7 +625,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
                       placeholder="E.g., Premium Chef's Knife"
                     />
                   </div>
-                  
+
                   <div>
                     <label htmlFor={`affiliate-url-${index}`} className="label">URL</label>
                     <input
@@ -658,7 +637,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
                       placeholder="https://example.com/product"
                     />
                   </div>
-                  
+
                   <div>
                     <label htmlFor={`affiliate-description-${index}`} className="label">Description (optional)</label>
                     <input
@@ -675,7 +654,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
             ))}
           </div>
         </div>
-        
+
         {/* Submit Buttons */}
         <div className="flex justify-end gap-4 mt-6">
           <button
