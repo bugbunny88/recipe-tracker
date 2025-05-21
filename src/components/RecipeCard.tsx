@@ -4,7 +4,6 @@ import { Heart, Clock, Award } from 'lucide-react';
 import { Recipe } from '../utils/types';
 import { useRecipes } from '../contexts/RecipeContext';
 import { cn } from '../utils/helpers';
-import { useTheme } from '../contexts/ThemeContext';
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -13,7 +12,6 @@ interface RecipeCardProps {
 
 const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, className }) => {
   const { toggleFavorite } = useRecipes();
-  const { theme } = useTheme();
   const { id, title, description, imageUrl, prepTime, cookTime, difficulty, isFavorite, dietaryTags } = recipe;
 
   const totalTime = prepTime + cookTime;
@@ -30,7 +28,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, className }) => {
   return (
     <div
       className={cn(
-        "bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden group hover:shadow-lg hover:-translate-y-1 transition-all duration-300",
+        "bg-white relative overflow-hidden group transition-all duration-500 shadow-sm hover:shadow-md",
         className
       )}
     >
@@ -38,34 +36,36 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, className }) => {
         <img
           src={imageUrl}
           alt={title}
-          className="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="h-64 w-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-10 group-hover:opacity-30 transition-opacity duration-500"></div>
+
         <button
           onClick={(e) => {
             e.preventDefault();
             toggleFavorite(id);
           }}
-          className="absolute top-3 right-3 p-2 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-full shadow-sm hover:bg-white dark:hover:bg-gray-700 transition-colors"
+          className="absolute top-4 right-4 p-2 bg-white/70 backdrop-blur-sm rounded-full hover:bg-white transition-colors z-10"
           aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
         >
           <Heart className={cn(
             "h-5 w-5 transition-colors",
-            isFavorite ? "fill-[#FF5C38] text-[#FF5C38]" : "text-gray-600 dark:text-primary-300"
+            isFavorite ? "fill-zesty-coral text-zesty-coral" : "text-zesty-brown/70"
           )} />
         </button>
 
         {dietaryTags && dietaryTags.length > 0 && (
-          <div className="absolute bottom-3 left-3 flex flex-wrap gap-1">
+          <div className="absolute bottom-4 left-4 flex flex-wrap gap-1 z-10">
             {dietaryTags.slice(0, 2).map((tag, index) => (
               <span
                 key={index}
-                className="text-xs px-2 py-1 rounded-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm text-gray-800 dark:text-primary-100 font-medium"
+                className="text-xs px-2 py-1 bg-white/90 backdrop-blur-sm text-zesty-brown font-medium"
               >
                 {tag}
               </span>
             ))}
             {dietaryTags.length > 2 && (
-              <span className="text-xs px-2 py-1 rounded-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm text-gray-800 dark:text-primary-100 font-medium">
+              <span className="text-xs px-2 py-1 bg-white/90 backdrop-blur-sm text-zesty-brown font-medium">
                 +{dietaryTags.length - 2}
               </span>
             )}
@@ -73,34 +73,35 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, className }) => {
         )}
       </div>
 
-      <div className="p-5">
-        <div className="flex justify-between items-start mb-2">
-          <h3 className={`text-lg font-display font-bold ${theme === 'dark' ? 'text-white' : 'text-[#292929]'} line-clamp-1 group-hover:text-[#FF5C38] transition-colors`}>
+      <div className="p-6">
+        <div className="mb-3">
+          <h3 className="font-elegant text-xl font-medium text-zesty-brown group-hover:text-zesty-coral transition-colors">
             {title}
           </h3>
         </div>
 
-        <p className="text-gray-600 dark:text-gray-300 line-clamp-2 mb-4 text-sm">{description}</p>
+        <p className="text-zesty-brown/70 mb-5 text-sm font-light line-clamp-2">{description}</p>
 
-        <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-100 dark:border-gray-700">
-          <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-            <Clock className="h-4 w-4 mr-1" />
+        <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+          <div className="flex items-center text-sm text-zesty-brown/60">
+            <Clock className="h-4 w-4 mr-1 text-zesty-coral" />
             <span>{timeDisplay()}</span>
           </div>
 
           <div className="flex items-center text-sm">
-            <Award className="h-4 w-4 mr-1" />
+            <Award className="h-4 w-4 mr-1 text-zesty-coral" />
             <span className={cn(
-              difficulty === 'Easy' ? 'text-green-500' :
-                difficulty === 'Medium' ? 'text-[#FF5C38]' :
-                  'text-red-500'
+              "font-medium",
+              difficulty === 'Easy' ? 'text-green-600' :
+                difficulty === 'Medium' ? 'text-zesty-coral' :
+                  'text-red-600'
             )}>
               {difficulty}
             </span>
           </div>
         </div>
       </div>
-      <Link to={`/recipes/${id}`} className="absolute inset-0" aria-label={`View ${title} recipe`}>
+      <Link to={`/recipes/${id}`} className="absolute inset-0 z-[5]" aria-label={`View ${title} recipe`}>
         <span className="sr-only">View recipe</span>
       </Link>
     </div>
