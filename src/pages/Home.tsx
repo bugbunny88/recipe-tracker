@@ -1,82 +1,151 @@
 import React from 'react';
 import { useRecipes } from '../contexts/RecipeContext';
 import RecipeCard from '../components/RecipeCard';
-import { Search, ChevronRight, Utensils, BookOpen, Share2 } from 'lucide-react';
-import { useTheme } from '../contexts/ThemeContext';
+import { ChevronRight, Utensils, BookOpen, Share2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useInView } from 'react-intersection-observer';
+
+// Utility component for scroll-triggered animations
+const AnimateOnScroll: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+  threshold?: number;
+  triggerOnce?: boolean;
+  delay?: number;
+  animation?: 'fadeIn' | 'slideUp' | 'slideRight' | 'scaleIn' | 'fade-in-slow' | 'slide-up-smooth';
+}> = ({
+  children,
+  className = '',
+  threshold = 0.1,
+  triggerOnce = true,
+  delay = 0,
+  animation = 'fadeIn'
+}) => {
+    const { ref, inView } = useInView({
+      threshold,
+      triggerOnce,
+    });
+
+    const baseClassName = `opacity-0 transition-all duration-1000`;
+
+    // Animation class mappings
+    const animationClasses = {
+      fadeIn: 'opacity-0',
+      slideUp: 'opacity-0 translate-y-10',
+      slideRight: 'opacity-0 -translate-x-10',
+      scaleIn: 'opacity-0 scale-95',
+      'fade-in-slow': 'opacity-0',
+      'slide-up-smooth': 'opacity-0 translate-y-10',
+    };
+
+    // Classes to apply when in view
+    const inViewClasses = {
+      fadeIn: 'opacity-100',
+      slideUp: 'opacity-100 translate-y-0',
+      slideRight: 'opacity-100 translate-x-0',
+      scaleIn: 'opacity-100 scale-100',
+      'fade-in-slow': 'opacity-100',
+      'slide-up-smooth': 'opacity-100 translate-y-0',
+    };
+
+    return (
+      <div
+        ref={ref}
+        className={`${baseClassName} ${animationClasses[animation]} ${className} ${inView ? inViewClasses[animation] : ''
+          }`}
+        style={{
+          transitionDelay: `${delay}ms`,
+          transitionTimingFunction: animation.includes('smooth') ? 'cubic-bezier(0.22, 1, 0.36, 1)' : undefined
+        }}
+      >
+        {children}
+      </div>
+    );
+  };
 
 const Home: React.FC = () => {
   const { recipes, favoriteRecipes } = useRecipes();
-  const { theme } = useTheme();
 
   // Get featured recipes (we'll just use the first 3 for now)
   const featuredRecipes = recipes.slice(0, 3);
 
   return (
-    <div className="animate-fadeIn">
-      {/* Hero Section */}
-      <section className="relative h-screen min-h-[600px] flex items-center">
-        <div className="absolute inset-0 bg-pattern bg-cover bg-center">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#292929]/80 to-[#464646]/70 dark:from-gray-900/95 dark:to-gray-800/90"></div>
+    <div>
+      {/* Hero Section - Zesty Style */}
+      <section className="relative h-screen min-h-[600px] flex items-center bg-zesty-cream overflow-hidden">
+        {/* Background with gradient overlay */}
+        <div className="absolute inset-0 bg-zesty-gradient">
+          <div className="absolute inset-0 bg-zesty-overlay"></div>
         </div>
 
-        <div className="container-custom relative z-10 pt-20">
-          <div className="max-w-2xl animate-slideUp">
-            <h1 className="text-white mb-6 animate-fadeIn" style={{ animationDelay: '0.2s' }}>Discover Delicious Homemade Recipes</h1>
-            <p className="text-xl text-white/90 mb-8 animate-fadeIn" style={{ animationDelay: '0.4s' }}>
-              Your ultimate collection of authentic recipes, cooking tips, and kitchen essentials to bring flavorful dishes to your home.
-            </p>
+        {/* Decorative elements */}
+        <div className="absolute left-1/2 -translate-x-1/2 top-28 w-48 h-0.5 bg-zesty-brown/20"></div>
+        <div className="absolute left-1/2 -translate-x-1/2 bottom-28 w-48 h-0.5 bg-zesty-brown/20"></div>
 
-            <div className="flex flex-col sm:flex-row gap-4 animate-fadeIn" style={{ animationDelay: '0.6s' }}>
-              <div className="relative flex-grow max-w-md">
-                <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
-                  }`} />
-                <input
-                  type="text"
-                  placeholder="Search recipes, ingredients..."
-                  className="w-full py-3 pl-10 pr-4 rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-[#FF5C38] shadow-lg dark:bg-gray-800 dark:text-white dark:placeholder-gray-400"
-                />
-              </div>
-              <button className="button-accent py-3 px-6 whitespace-nowrap">
-                Find Recipes
-              </button>
-            </div>
+        <div className="container mx-auto px-6 relative z-10 pt-20 text-center">
+          <div className="max-w-4xl mx-auto">
+            <AnimateOnScroll animation="fade-in-slow" delay={200}>
+              <h1 className="font-elegant text-5xl md:text-7xl lg:text-8xl font-light text-zesty-brown mb-8 tracking-wide">
+                Discover Delicious<br />Homemade Recipes
+              </h1>
+            </AnimateOnScroll>
 
-            <div className="mt-8 grid grid-cols-3 gap-6 animate-fadeIn" style={{ animationDelay: '0.8s' }}>
-              <div className="bg-white/10 dark:bg-gray-800/20 backdrop-blur-sm p-4 rounded-lg text-center hover:bg-white/20 transition-all duration-300">
-                <Utensils className="h-6 w-6 mx-auto mb-2 text-[#FF5C38]" />
-                <p className="text-white font-medium">{recipes.length}+ Recipes</p>
+            <AnimateOnScroll animation="slide-up-smooth" delay={600}>
+              <p className="text-xl md:text-2xl text-zesty-brown/80 mb-12 max-w-2xl mx-auto font-light">
+                Your ultimate collection of authentic recipes, bringing flavorful dishes to your home.
+              </p>
+            </AnimateOnScroll>
+
+            <AnimateOnScroll animation="fade-in-slow" delay={1000}>
+              <div className="flex flex-col sm:flex-row gap-5 max-w-lg mx-auto justify-center mb-16">
+                <Link
+                  to="/recipes"
+                  className="py-4 px-10 border border-zesty-brown/80 text-zesty-brown hover:bg-zesty-brown hover:text-white transition-all duration-500 rounded-none"
+                >
+                  Browse Recipes
+                </Link>
               </div>
-              <div className="bg-white/10 dark:bg-gray-800/20 backdrop-blur-sm p-4 rounded-lg text-center hover:bg-white/20 transition-all duration-300">
-                <BookOpen className="h-6 w-6 mx-auto mb-2 text-[#FF5C38]" />
-                <p className="text-white font-medium">Recipe Collections</p>
+            </AnimateOnScroll>
+
+            <AnimateOnScroll animation="fade-in-slow" delay={1200}>
+              <div className="mt-8 grid grid-cols-3 gap-8 max-w-3xl mx-auto">
+                <div className="p-5 text-center">
+                  <Utensils className="h-8 w-8 mx-auto mb-3 text-zesty-coral" />
+                  <p className="text-zesty-brown font-medium">{recipes.length}+ Recipes</p>
+                </div>
+                <div className="p-5 text-center">
+                  <BookOpen className="h-8 w-8 mx-auto mb-3 text-zesty-coral" />
+                  <p className="text-zesty-brown font-medium">Recipe Collections</p>
+                </div>
+                <div className="p-5 text-center">
+                  <Share2 className="h-8 w-8 mx-auto mb-3 text-zesty-coral" />
+                  <p className="text-zesty-brown font-medium">Easy Sharing</p>
+                </div>
               </div>
-              <div className="bg-white/10 dark:bg-gray-800/20 backdrop-blur-sm p-4 rounded-lg text-center hover:bg-white/20 transition-all duration-300">
-                <Share2 className="h-6 w-6 mx-auto mb-2 text-[#FF5C38]" />
-                <p className="text-white font-medium">Easy Sharing</p>
-              </div>
-            </div>
+            </AnimateOnScroll>
           </div>
         </div>
       </section>
 
       {/* Featured Recipes Section */}
-      <section className="py-16 bg-[#fbfbfb] dark:bg-gray-900">
-        <div className="container-custom">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className={`${theme === 'dark' ? 'text-white' : 'text-[#292929]'} relative after:content-[""] after:absolute after:h-1 after:w-16 after:bg-[#FF5C38] after:-bottom-2 after:left-0`}>
-              Featured Recipes
-            </h2>
-            <Link to="/recipes" className="button-outline flex items-center">
-              View All <ChevronRight className="ml-2 h-4 w-4" />
-            </Link>
-          </div>
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-6">
+          <AnimateOnScroll animation="slide-up-smooth">
+            <div className="flex justify-between items-center mb-16">
+              <h2 className="font-elegant text-4xl md:text-5xl text-zesty-brown">
+                Featured Recipes
+              </h2>
+              <Link to="/recipes" className="flex items-center text-zesty-coral hover:text-zesty-brown transition-colors">
+                View All <ChevronRight className="ml-2 h-4 w-4" />
+              </Link>
+            </div>
+          </AnimateOnScroll>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {featuredRecipes.map((recipe, index) => (
-              <div key={recipe.id} className="animate-fadeIn" style={{ animationDelay: `${0.2 * index}s` }}>
+              <AnimateOnScroll key={recipe.id} animation="fade-in-slow" delay={index * 300}>
                 <RecipeCard recipe={recipe} />
-              </div>
+              </AnimateOnScroll>
             ))}
           </div>
         </div>
@@ -84,22 +153,24 @@ const Home: React.FC = () => {
 
       {/* Favorites Section (Only shown if user has favorites) */}
       {favoriteRecipes.length > 0 && (
-        <section className="py-16 bg-white dark:bg-gray-900/50">
-          <div className="container-custom">
-            <div className="flex justify-between items-center mb-8">
-              <h2 className={`${theme === 'dark' ? 'text-white' : 'text-[#292929]'} relative after:content-[""] after:absolute after:h-1 after:w-16 after:bg-[#FF5C38] after:-bottom-2 after:left-0`}>
-                Your Favorite Recipes
-              </h2>
-              <Link to="/recipes" className="button-outline flex items-center">
-                View All <ChevronRight className="ml-2 h-4 w-4" />
-              </Link>
-            </div>
+        <section className="py-24 bg-zesty-cream">
+          <div className="container mx-auto px-6">
+            <AnimateOnScroll animation="slide-up-smooth">
+              <div className="flex justify-between items-center mb-16">
+                <h2 className="font-elegant text-4xl md:text-5xl text-zesty-brown">
+                  Your Favorite Recipes
+                </h2>
+                <Link to="/recipes" className="flex items-center text-zesty-coral hover:text-zesty-brown transition-colors">
+                  View All <ChevronRight className="ml-2 h-4 w-4" />
+                </Link>
+              </div>
+            </AnimateOnScroll>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
               {favoriteRecipes.slice(0, 3).map((recipe, index) => (
-                <div key={recipe.id} className="animate-fadeIn" style={{ animationDelay: `${0.2 * index}s` }}>
+                <AnimateOnScroll key={recipe.id} animation="fade-in-slow" delay={index * 300}>
                   <RecipeCard recipe={recipe} />
-                </div>
+                </AnimateOnScroll>
               ))}
             </div>
           </div>
@@ -107,15 +178,25 @@ const Home: React.FC = () => {
       )}
 
       {/* CTA Section */}
-      <section className="py-16 bg-[#292929] dark:bg-gray-800 text-white">
-        <div className="container-custom text-center">
-          <h2 className="text-white mb-6 animate-fadeIn">Ready to Share Your Own Recipes?</h2>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto animate-fadeIn" style={{ animationDelay: '0.2s' }}>
-            Join our community of food lovers and share your favorite recipes with the world.
-          </p>
-          <Link to="/recipes/create" className="button-accent py-3 px-8 text-lg animate-fadeIn" style={{ animationDelay: '0.4s' }}>
-            Create Recipe
-          </Link>
+      <section className="py-24 bg-zesty-tan text-center">
+        <div className="container mx-auto px-6">
+          <div className="max-w-3xl mx-auto">
+            <AnimateOnScroll animation="fade-in-slow">
+              <h2 className="font-elegant text-4xl md:text-5xl text-zesty-brown mb-8">Ready to Share Your Own Recipes?</h2>
+            </AnimateOnScroll>
+
+            <AnimateOnScroll animation="slide-up-smooth" delay={300}>
+              <p className="text-xl text-zesty-brown/80 mb-12 max-w-2xl mx-auto">
+                Join our community of food lovers and share your favorite recipes with the world.
+              </p>
+            </AnimateOnScroll>
+
+            <AnimateOnScroll animation="fade-in-slow" delay={600}>
+              <Link to="/recipes/create" className="inline-block py-4 px-10 bg-zesty-coral text-white hover:bg-zesty-brown transition-all duration-500">
+                Create Recipe
+              </Link>
+            </AnimateOnScroll>
+          </div>
         </div>
       </section>
     </div>
