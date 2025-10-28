@@ -346,7 +346,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
         return res.status(400).json({ error: 'Invalid JSON in request body' });
     }
 
-    res.status(500).json({
+    return res.status(500).json({
         error: 'Internal server error',
         ...(process.env.NODE_ENV === 'development' && { details: err.message })
     });

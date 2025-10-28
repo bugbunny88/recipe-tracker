@@ -1,22 +1,23 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
+    "composite": true,
     "target": "ES2022",
     "lib": ["ES2023"],
     "module": "ESNext",
-    "skipLibCheck": true,
 
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
+    /* Node tooling */
+    "moduleResolution": "node",
     "moduleDetection": "force",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
     "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "exactOptionalPropertyTypes": false,
 
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    /* Type roots */
+    "types": ["node", "vitest/importMeta", "vitest/globals"]
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", "vitest.config.ts", "playwright.config.ts"]
 }

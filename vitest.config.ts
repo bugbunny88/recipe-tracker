@@ -1,9 +1,10 @@
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
-import path from 'path'
+import * as path from 'path'
 
 export default defineConfig({
-  plugins: [react()],
+  // Vitest pins a separate copy of Vite so we cast to avoid duplicate type inference issues.
+  plugins: [react()] as any,
   test: {
     globals: true,
     environment: 'jsdom',
