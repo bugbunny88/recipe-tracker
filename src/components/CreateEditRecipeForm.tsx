@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { useRecipes } from '../contexts/RecipeContext';
 import { Recipe, Ingredient, Nutrition, AffiliateLink } from '../utils/types';
-import { Plus, Minus, X, CheckCircle2 } from 'lucide-react';
+import { Plus, X, CheckCircle2 } from 'lucide-react';
 import { dietaryTags } from '../utils/mockData';
 
 interface CreateEditRecipeFormProps {
   existingRecipe?: Recipe;
   mode: 'create' | 'edit';
 }
+
+type EditableIngredientField = 'name' | 'quantity' | 'unit' | 'notes';
+type EditableAffiliateLinkField = 'title' | 'url' | 'description';
 
 const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRecipe, mode }) => {
   const navigate = useNavigate();
@@ -48,13 +51,17 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
   };
 
   // Handle ingredient changes
-  const updateIngredient = (index: number, field: keyof Ingredient, value: string) => {
-    const updatedIngredients = [...ingredients];
-    updatedIngredients[index] = {
-      ...updatedIngredients[index],
-      [field]: value
-    };
-    setIngredients(updatedIngredients);
+  const updateIngredient = (index: number, field: EditableIngredientField, value: string) => {
+    setIngredients(prevIngredients =>
+      prevIngredients.map((ingredient, ingredientIndex) =>
+        ingredientIndex === index
+          ? {
+              ...ingredient,
+              [field]: value
+            }
+          : ingredient
+      )
+    );
   };
 
   // Add new ingredient
@@ -104,13 +111,17 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
   };
 
   // Handle affiliate link changes
-  const updateAffiliateLink = (index: number, field: keyof AffiliateLink, value: string) => {
-    const updatedLinks = [...affiliateLinks];
-    updatedLinks[index] = {
-      ...updatedLinks[index],
-      [field]: value
-    };
-    setAffiliateLinks(updatedLinks);
+  const updateAffiliateLink = (index: number, field: EditableAffiliateLinkField, value: string) => {
+    setAffiliateLinks(prevLinks =>
+      prevLinks.map((link, linkIndex) =>
+        linkIndex === index
+          ? {
+              ...link,
+              [field]: value
+            }
+          : link
+      )
+    );
   };
 
   // Add new affiliate link
@@ -138,7 +149,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
 
     // Validate ingredients
     let hasIngredientError = false;
-    ingredients.forEach((ingredient, index) => {
+    ingredients.forEach((ingredient) => {
       if (!ingredient.name.trim() || !ingredient.quantity.trim() || !ingredient.unit.trim()) {
         hasIngredientError = true;
       }
@@ -147,7 +158,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
 
     // Validate instructions
     let hasInstructionError = false;
-    instructions.forEach((instruction, index) => {
+    instructions.forEach((instruction) => {
       if (!instruction.trim()) {
         hasInstructionError = true;
       }
@@ -159,7 +170,7 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
   };
 
   // Submit form
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -190,13 +201,13 @@ const CreateEditRecipeForm: React.FC<CreateEditRecipeFormProps> = ({ existingRec
       };
 
       if (mode === 'create') {
-        const newRecipe = addRecipe(recipeData);
+        const newRecipe = await addRecipe(recipeData);
         setSuccessMessage('Recipe created successfully!');
         setTimeout(() => {
           navigate(`/recipes/${newRecipe.id}`);
         }, 1500);
       } else if (mode === 'edit' && existingRecipe) {
-        updateRecipe(existingRecipe.id, recipeData);
+        await updateRecipe(existingRecipe.id, recipeData);
         setSuccessMessage('Recipe updated successfully!');
         setTimeout(() => {
           navigate(`/recipes/${existingRecipe.id}`);

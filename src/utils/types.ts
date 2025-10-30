@@ -10,6 +10,7 @@ export interface Recipe {
   instructions: string[];
   dietaryTags: string[];
   imageUrl: string;
+  cuisine?: string;
   createdAt: string;
   updatedAt: string;
   nutrition: Nutrition;
